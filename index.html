@@ -1,190 +1,164 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Bolão da Mega Positivo</title>
   <style>
     body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(145deg, #00c6ff, #0072ff);
-      color: #fff;
-      padding: 30px;
+      font-family: 'Arial', sans-serif;
+      background: linear-gradient(135deg, #ff7e5f, #feb47b);
+      color: #333;
+      padding: 20px;
       margin: 0;
     }
     h1 {
       text-align: center;
-      color: #ffea00;
-      font-size: 2.2rem;
-      text-shadow: 1px 1px 3px #000;
+      color: #fff;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
     }
     form {
-      background-color: rgba(255, 255, 255, 0.1);
-      padding: 25px;
-      border-radius: 20px;
-      max-width: 420px;
-      margin: 30px auto;
-      box-shadow: 0 0 15px rgba(0,0,0,0.3);
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      max-width: 500px;
+      margin: 20px auto;
     }
     label {
       display: block;
-      margin: 10px 0 5px;
+      margin-top: 10px;
       font-weight: bold;
-      color: #fff;
     }
     input, select, button {
       width: 100%;
       padding: 10px;
-      margin-bottom: 15px;
-      border: none;
-      border-radius: 10px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
       font-size: 1rem;
     }
-    input, select {
-      background: #fff;
-      color: #333;
-    }
     button {
-      background-color: #ffea00;
-      color: #000;
-      font-weight: bold;
+      background-color: #ff7e5f;
+      color: #fff;
+      border: none;
       cursor: pointer;
       transition: background 0.3s;
     }
     button:hover {
-      background-color: #ffe100;
+      background-color: #feb47b;
     }
     .grid {
       display: grid;
       grid-template-columns: repeat(6, 1fr);
-      gap: 6px;
+      gap: 10px;
       margin-top: 10px;
     }
     .grid button {
-      background-color: #fff;
-      color: #000;
-      font-weight: bold;
-      border-radius: 8px;
+      background-color: #f0f0f0;
+      color: #333;
+      border: 1px solid #ccc;
+      border-radius: 4px;
       cursor: pointer;
-      transition: 0.2s;
+      padding: 10px;
+      transition: background 0.3s, transform 0.2s;
     }
     .grid button.selected {
-      background-color: #ffea00;
-      color: #000;
-      transform: scale(1.05);
+      background-color: #ff7e5f;
+      color: #fff;
+      transform: scale(1.1);
     }
     #contador {
       text-align: center;
-      font-size: 18px;
       margin-top: 10px;
-      color: #ffea00;
       font-weight: bold;
     }
-    #loading {
-      display: none;
+    #mensagem {
       text-align: center;
-      margin-top: 10px;
-    }
-    #loading img {
-      width: 30px;
-    }
-    #confirmacao {
-      display: none;
-      text-align: center;
-      background: #000000aa;
-      padding: 20px;
-      border-radius: 15px;
-      margin: 20px auto;
-      max-width: 420px;
-      color: #fff;
-    }
-    #confirmacao p {
-      margin: 5px 0;
-    }
-    #btn-voltar {
-      background-color: #fff;
-      color: #0072ff;
+      margin-top: 20px;
       font-weight: bold;
-      border-radius: 8px;
-      cursor: pointer;
-      padding: 10px;
-      margin-top: 15px;
+      color: green;
     }
   </style>
 </head>
 <body>
-  <h1>Bolão da Mega Positivo<br>(Bar do Enoquis)</h1>
+  <h1>Bolão da Mega Positivo</h1>
   <form id="formulario">
     <label for="nome">Nome completo:</label>
-    <input type="text" id="nome" name="nome" required />
+    <input type="text" id="nome" name="nome" required>
 
     <label for="nomePlanilha">Nome para Planilha:</label>
-    <input type="text" id="nomePlanilha" name="nomePlanilha" required />
+    <input type="text" id="nomePlanilha" name="nomePlanilha" required>
 
     <label for="whatsapp">WhatsApp:</label>
-    <input type="text" id="whatsapp" name="whatsapp" required />
+    <input type="text" id="whatsapp" name="whatsapp" required>
 
     <label for="cidade">Cidade:</label>
-    <input type="text" id="cidade" name="cidade" required />
+    <input type="text" id="cidade" name="cidade" required>
 
     <label>Escolha 10 dezenas:</label>
     <div id="dezenas" class="grid"></div>
     <div id="contador">Dezenas escolhidas: 0/10</div>
 
     <button type="submit">Confirmar Cadastro</button>
-    <div id="loading"><img src="https://i.gifer.com/ZZ5H.gif" alt="Carregando..." /></div>
+    <div id="mensagem"></div>
   </form>
 
-  <div id="confirmacao">
-    <h2>Confira seus dados:</h2>
-    <p id="resumoDados"></p>
-    <button id="btn-voltar" onclick="window.location.reload()">Voltar</button>
-  </div>
-
   <script>
-    const form = document.getElementById("formulario");
-    const dezenasContainer = document.getElementById("dezenas");
-    const contador = document.getElementById("contador");
+    document.addEventListener("DOMContentLoaded", function() {
+      const dezenasDiv = document.getElementById("dezenas");
+      const contador = document.getElementById("contador");
+      const form = document.getElementById("formulario");
+      const mensagem = document.getElementById("mensagem");
 
-    for (let i = 1; i <= 60; i++) {
-      const btn = document.createElement("button");
-      btn.type = "button";
-      btn.textContent = i.toString().padStart(2, '0');
-      btn.addEventListener("click", () => {
-        btn.classList.toggle("selected");
-        const selecionadas = document.querySelectorAll(".grid button.selected");
-        if (selecionadas.length > 10) {
-          btn.classList.remove("selected");
-          alert("Você só pode escolher 10 dezenas!");
+      let dezenasSelecionadas = [];
+
+      for (let i = 1; i <= 60; i++) {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.textContent = i.toString().padStart(2, '0');
+        btn.addEventListener("click", () => {
+          if (dezenasSelecionadas.includes(i)) {
+            dezenasSelecionadas = dezenasSelecionadas.filter(d => d !== i);
+            btn.classList.remove("selected");
+          } else if (dezenasSelecionadas.length < 10) {
+            dezenasSelecionadas.push(i);
+            btn.classList.add("selected");
+          }
+          contador.textContent = `Dezenas escolhidas: ${dezenasSelecionadas.length}/10`;
+        });
+        dezenasDiv.appendChild(btn);
+      }
+
+      form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        if (dezenasSelecionadas.length !== 10) {
+          alert("Por favor, selecione exatamente 10 dezenas.");
+          return;
         }
-        contador.textContent = `Dezenas escolhidas: ${selecionadas.length}/10`;
-      });
-      dezenasContainer.appendChild(btn);
-    }
 
-    form.addEventListener("submit", function (e) {
-      e.preventDefault();
-      document.getElementById("loading").style.display = "block";
+        const formData = new FormData(form);
+        formData.append('dezenas', dezenasSelecionadas.join(', '));
 
-      const dezenasSelecionadas = Array.from(document.querySelectorAll(".grid button.selected"))
-        .map(btn => btn.textContent)
-        .join(",");
-
-      const dados = new FormData(form);
-      dados.append("dezenas", dezenasSelecionadas);
-
-      fetch("https://script.google.com/macros/s/SEU_SCRIPT_ID_AQUI/exec", {
-        method: "POST",
-        body: dados
-      })
-      .then(response => response.text())
-      .then(() => {
-        document.getElementById("loading").style.display = "none";
-        document.getElementById("confirmacao").style.display = "block";
-      })
-      .catch(err => {
-        alert("Erro ao enviar dados. Tente novamente.");
-        document.getElementById("loading").style.display = "none";
+        fetch('https://script.google.com/macros/s/AKfycbxuledm7z1Inh2NDDfBnm9-MS4Zu-EqKhcRkoM5Lk7lILKcc5VErmnQnDlqWeTnklFdAg/exec', {
+          method: 'POST',
+          mode: 'cors',
+          headers: {
+            'Content-Type': 'application/json'
+           },
+          body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+          mensagem.textContent = "Cadastro realizado com sucesso!";
+          form.reset();
+          dezenasSelecionadas = [];
+          document.querySelectorAll('.grid button').forEach(btn => btn.classList.remove('selected'));
+          contador.textContent = "Dezenas escolhidas: 0/10";
+        })
+        .catch(error => {
+          mensagem.textContent = "Ocorreu um erro ao enviar os dados.";
+        });
       });
     });
   </script>
