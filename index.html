@@ -130,42 +130,45 @@
       dezenasDiv.appendChild(btn);
     }
 
-    form.addEventListener("submit", (e) => {
-      e.preventDefault();
-      if (dezenasSelecionadas.length !== 10) {
-        alert("Por favor, selecione exatamente 10 dezenas.");
-        return;
-      }
+   form.addEventListener("submit", (e) => {
+  e.preventDefault();
+  if (dezenasSelecionadas.length !== 10) {
+    alert("Por favor, selecione 10 dezenas.");
+    return;
+  }
 
-      const dados = {
-        nome: form.nome.value,
-        nomePlanilha: form.nomePlanilha.value,
-        whatsapp: form.whatsapp.value,
-        cidade: form.cidade.value,
-        dezenas: dezenasSelecionadas.join(", ")
-      };
+  const dados = {
+    nome: form.nome.value,
+    nomePlanilha: form.nomePlanilha.value,
+    whatsapp: form.whatsapp.value,
+    cidade: form.cidade.value,
+    dezenas: dezenasSelecionadas.join(", ")
+  };
 
-      fetch('https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec', {
-        method: 'POST',
-        mode: 'cors',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(dados)
-      })
-      .then(response => response.json())
-      .then(data => {
-        mensagem.textContent = "Cadastro realizado com sucesso!";
-        form.reset();
-        dezenasSelecionadas = [];
-        document.querySelectorAll('.grid button').forEach(btn => btn.classList.remove('selected'));
-        contador.textContent = "Dezenas escolhidas: 0/10";
-      })
-      .catch(error => {
-        mensagem.textContent = "Ocorreu um erro ao enviar os dados.";
-        console.error('Erro:', error);
-      });
-    });
+  fetch('https://script.google.com/macros/s/AKfycbxZmyiFfh_Z03BHBVhI5ofHv0-NtacKtt_V4AYU7C8omQtn6dQSqdoD_Ap1nDTow4BMmw/exec', {
+    method: 'POST',
+    mode: 'cors',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(dados)
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.status === "sucesso") {
+      alert("Cadastro realizado com sucesso!");
+      form.reset();
+      dezenasSelecionadas = [];
+      document.querySelectorAll('.grid button').forEach(btn => btn.classList.remove('selected'));
+      contador.textContent = "Dezenas escolhidas: 0/10";
+    } else {
+      alert("Erro: " + data.mensagem);
+    }
+  })
+  .catch(error => {
+    alert("Ocorreu um erro ao enviar os dados: " + error.message);
+  });
+});
   });
 </script>
 </body>
