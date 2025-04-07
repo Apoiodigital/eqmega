@@ -138,21 +138,17 @@
   }
 
   const dados = {
-    nome: form.nome.value,
-    nomePlanilha: form.nomePlanilha.value,
-    whatsapp: form.whatsapp.value,
-    cidade: form.cidade.value,
-    dezenas: dezenasSelecionadas.join(", ")
-  };
+  nome: form.nome.value,
+  whatsapp: form.whatsapp.value,
+  cidade: form.cidade.value,
+  planilha_nome: form.planilha_nome.value,
+  dezenas: selecionados.join(", ")
+};
 
-  fetch('https://script.google.com/macros/s/AKfycbyY0L9qQNAtJLzr1ANU5txcIOTqoq5d03PFPb9ovptyCF61yeizjBqW9oalIPgZuXcvpQ/exec', {
-    method: 'POST',
-    mode: 'cors',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(dados)
-  })
+await fetch("https://script.google.com/macros/s/AKfycbyY0L9qQNAtJLzr1ANU5txcIOTqoq5d03PFPb9ovptyCF61yeizjBqW9oalIPgZuXcvpQ/exec", {
+  method: "POST",
+  body: new URLSearchParams(dados)
+});
   .then(response => response.json())
   .then(data => {
     if (data.status === "sucesso") {
