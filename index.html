@@ -58,12 +58,11 @@
 
       const dados = new URLSearchParams(new FormData(form));
 
-      try {
-        const res = await fetch("https://script.google.com/macros/s/AKfycbxZmyiFfh_Z03BHBVhI5ofHv0-NtacKtt_V4AYU7C8omQtn6dQSqdoD_Ap1nDTow4BMmw/exec", {
-          method: "POST",
-          headers: { "Content-Type": "application/x-www-form-urlencoded" },
-          body: dados
-        });
+      await fetch('https://script.google.com/macros/s/AKfycbwe7Ba5Mnc-OWzNxD0LE73odDINIVUNLWIsljPkG8yOTkiAX2VKAPFf9iY7MN_JlgyfIw/exec', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify(dados)
+});
 
         const json = await res.json();
         mensagem.textContent = json.mensagem;
