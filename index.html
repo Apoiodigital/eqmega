@@ -1,30 +1,62 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <title>Formulário para Google Sheets</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Participe e Boa Sorte!</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primario: "#ff007f",
+            secundario: "#6b21a8"
+          }
+        }
+      }
+    }
+  </script>
 </head>
-<body>
-  <h2>Cadastro de Aposta</h2>
-  <form id="meuFormulario">
-    <label>Nome: <input type="text" name="nome" required></label><br><br>
-    <label>WhatsApp: <input type="text" name="whatsapp" required></label><br><br>
-    <label>Cidade: <input type="text" name="cidade" required></label><br><br>
-    <label>Nome da Planilha: <input type="text" name="planilha_nome" required></label><br><br>
-    <label>Dezenas: <input type="text" name="dezenas" required></label><br><br>
-    <button type="submit">Enviar</button>
-  </form>
+<body class="bg-gradient-to-tr from-primario to-secundario min-h-screen flex items-center justify-center p-4">
+  <div class="bg-white rounded-3xl shadow-xl p-8 w-full max-w-lg animate-fade-in">
+    <h1 class="text-3xl font-bold text-center text-primario mb-2">🔥 Participe da Jogada da Sorte!</h1>
+    <p class="text-center text-gray-600 mb-6">Preencha seus dados e entre no jogo. É rápido, seguro e cheio de prêmios! 💸</p>
 
-  <div id="resposta"></div>
+    <form id="formulario" class="space-y-4">
+      <input type="text" name="nome" placeholder="Seu nome completo" required
+        class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-primario" />
+      
+      <input type="text" name="whatsapp" placeholder="Seu WhatsApp" required
+        class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-primario" />
+      
+      <input type="text" name="cidade" placeholder="Sua cidade" required
+        class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-primario" />
+
+      <input type="text" name="planilha_nome" placeholder="Nome da planilha (admin)" required
+        class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-primario" />
+
+      <input type="text" name="dezenas" placeholder="Suas dezenas (ex: 01, 12, 22, ...)" required
+        class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-primario" />
+
+      <button type="submit"
+        class="w-full py-3 bg-primario text-white font-bold rounded-xl hover:bg-pink-700 transition duration-300">
+        🚀 Enviar e Participar
+      </button>
+    </form>
+
+    <div id="mensagem" class="mt-4 text-center font-semibold"></div>
+  </div>
 
   <script>
-    const formulario = document.getElementById('meuFormulario');
-    const resposta = document.getElementById('resposta');
+    const form = document.getElementById("formulario");
+    const mensagem = document.getElementById("mensagem");
 
-    formulario.addEventListener('submit', async function (e) {
+    form.addEventListener("submit", async function (e) {
       e.preventDefault();
+      mensagem.textContent = "Enviando... ⏳";
 
-      const dados = new URLSearchParams(new FormData(formulario));
+      const dados = new URLSearchParams(new FormData(form));
 
       try {
         const res = await fetch("https://script.google.com/macros/s/AKfycbxZmyiFfh_Z03BHBVhI5ofHv0-NtacKtt_V4AYU7C8omQtn6dQSqdoD_Ap1nDTow4BMmw/exec", {
@@ -34,12 +66,26 @@
         });
 
         const json = await res.json();
-        resposta.innerText = json.mensagem;
-      } catch (erro) {
-        resposta.innerText = "Erro ao enviar dados.";
-        console.error("Erro:", erro);
+        mensagem.textContent = json.mensagem;
+        mensagem.classList.add("text-green-600");
+
+        form.reset();
+      } catch (error) {
+        mensagem.textContent = "Erro ao enviar. Tente novamente!";
+        mensagem.classList.add("text-red-600");
+        console.error("Erro:", error);
       }
     });
   </script>
+
+  <style>
+    @keyframes fade-in {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .animate-fade-in {
+      animation: fade-in 0.8s ease-in-out;
+    }
+  </style>
 </body>
 </html>
